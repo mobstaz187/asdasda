@@ -7,7 +7,7 @@ interface ChickenProps {
 const Chicken: React.FC<ChickenProps> = ({ position }) => {
   return (
     <img 
-      src="/src/Dancing-chicken.gif" 
+      src="./assets/Dancing-chicken.gif" 
       alt="Dancing Chicken"
       className="absolute w-24 h-24 pointer-events-none"
       style={{ 

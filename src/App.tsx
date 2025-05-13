@@ -4,8 +4,8 @@ import ChickenOverlay from './components/ChickenOverlay';
 import DvdTextOverlay from './components/DvdTextOverlay';
 
 function App() {
-  // Using the local video file
-  const videoUrl = "/src/J.Geco - Chicken Song.mp4";
+  // Using the local video file from public assets
+  const videoUrl = "./assets/J.Geco - Chicken Song.mp4";
   
   return (
     <div className="w-full h-screen overflow-hidden">
