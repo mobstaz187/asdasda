@@ -7,5 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  base: '/immersive-video-experience/', // Replace with your repository name
+  base: './', // Change to relative path for GitHub Pages
 });
