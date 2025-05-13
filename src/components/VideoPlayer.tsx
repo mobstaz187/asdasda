@@ -9,10 +9,33 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoSrc }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Start muted to ensure autoplay works
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isControlsVisible, setIsControlsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  // Handle autoplay
+  const attemptPlay = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      await video.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.error("Autoplay failed:", error);
+      setIsPlaying(false);
+      // If autoplay fails, ensure video is muted and try again
+      video.muted = true;
+      setIsMuted(true);
+      try {
+        await video.play();
+        setIsPlaying(true);
+      } catch (secondError) {
+        console.error("Muted autoplay failed:", secondError);
+      }
+    }
+  };
   
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -46,16 +69,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoSrc }) => {
   }, [isPlaying]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (video && isLoaded) {
-      video.play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((error) => {
-          console.error("Autoplay failed:", error);
-          setIsPlaying(false);
-        });
+    if (isLoaded) {
+      attemptPlay();
     }
   }, [isLoaded]);
 
@@ -122,7 +137,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoSrc }) => {
           // Force play when paused
           const video = videoRef.current;
           if (video) {
-            video.play();
+            attemptPlay();
           }
         }}
         onLoadedMetadata={handleVideoLoaded}
